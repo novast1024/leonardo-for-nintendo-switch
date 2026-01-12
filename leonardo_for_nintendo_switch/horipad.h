@@ -1,11 +1,13 @@
 #ifndef HORIPAD_H
 #define HORIPAD_H
 
-#include <HID.h>
+#include <Arduino.h>
 
 #ifdef USBCON
 
-class Horipad : PluggableUSBModule {
+#include "PluggableUSB.h"
+
+class Horipad : public PluggableUSBModule {
 public:
     Horipad(void);
     bool ready();
