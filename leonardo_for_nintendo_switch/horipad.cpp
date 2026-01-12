@@ -2,6 +2,8 @@
 
 #ifdef USBCON
 
+namespace {
+
 static const uint8_t HORIPAD_REPORT_DESCRIPTOR[] PROGMEM = {
     0x05, 0x01,        // Usage Page (Generic Desktop Ctrls)
     0x09, 0x05,        // Usage (Game Pad)
@@ -53,6 +55,43 @@ static const uint8_t HORIPAD_REPORT_DESCRIPTOR[] PROGMEM = {
     0xC0               // End Collection
 };
 
+
+enum : uint8_t {
+    HID_GET_REPORT = 0x01,
+    HID_GET_IDLE = 0x02,
+    HID_GET_PROTOCOL = 0x03,
+    HID_SET_REPORT = 0x09,
+    HID_SET_IDLE = 0x0A,
+    HID_SET_PROTOCOL = 0x0B,
+
+    HID_REPORT_DESCRIPTOR_TYPE = 0x22,
+    HID_SUBCLASS_NONE = 0,
+    HID_PROTOCOL_NONE = 0,
+    HID_REPORT_PROTOCOL = 1,
+};
+
+#define D_HIDREPORT(length) { 9, 0x21, 0x01, 0x01, 0, 1, 0x22, lowByte(length), highByte(length) }
+
+struct HIDDescDescriptor {
+    uint8_t len;
+    uint8_t dtype;
+    uint8_t addr;
+    uint8_t versionL;
+    uint8_t versionH;
+    uint8_t country;
+    uint8_t desctype;
+    uint8_t descLenL;
+    uint8_t descLenH;
+};
+
+struct HIDDescriptor {
+    InterfaceDescriptor hid;
+    HIDDescDescriptor   desc;
+    EndpointDescriptor  in;
+};
+
+} // namespace
+
 bool Horipad::ready() {
     // IN endpoint ready: previous packet has been taken by the host (TXINI=1)
 
@@ -61,7 +100,7 @@ bool Horipad::ready() {
     // TXINI - Transmit IN Interrupt flag (Transmitter Ready Interrupt Flag)
     // UEINTX - USB Endpoint Interrupt Flags Register (X = selected endpoint)
     UENUM = pluggedEndpoint;
-    return (UEINTX & (1 << TXINI));
+    return UEINTX & (1 << TXINI);
 }
 
 void Horipad::SendReport(void* data, int length) {
