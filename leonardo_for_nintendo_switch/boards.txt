@@ -310,15 +310,18 @@ leonardo.bootloader.lock_bits=0x2F
 leonardo.build.mcu=atmega32u4
 leonardo.build.f_cpu=16000000L
 # leonardo.build.vid=0x2341
-# leonardo.build.pid=0x8036
-# leonardo.build.usb_product="Arduino Leonardo"
 leonardo.build.vid=0x0F0D
+# leonardo.build.pid=0x8036
 leonardo.build.pid=0x00C1
-leonardo.build.usb_product="Horipad for Nintendo Switch"
+#
+leonardo.build.usb_manufacturer="HORI CO.,LTD."
+# leonardo.build.usb_product="Arduino Leonardo"
+leonardo.build.usb_product="HORIPAD S"
 leonardo.build.board=AVR_LEONARDO
 leonardo.build.core=arduino
 leonardo.build.variant=leonardo
 leonardo.build.extra_flags={build.usb_flags}
+
 
 ##############################################################
 
