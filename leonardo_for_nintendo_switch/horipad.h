@@ -11,7 +11,7 @@ class Horipad : public PluggableUSBModule {
 public:
     Horipad(void);
     bool ready();
-    void SendReport(void* data, int length);
+    void SendReport(const void *data, int length);
 
 protected:
     // Implementation of the PluggableUSBModule

@@ -10,7 +10,7 @@
  * NOTE:
  *   The output buffer must be at least (in_size + in_size / 254 + 1) bytes long.
  */
-size_t encode_cobsr(uint8_t *in, size_t in_size, uint8_t *out) {
+size_t encode_cobsr(const uint8_t *in, size_t in_size, uint8_t *out) {
     if (in_size == 0) {
         out[0] = 0x01;
         return 1;

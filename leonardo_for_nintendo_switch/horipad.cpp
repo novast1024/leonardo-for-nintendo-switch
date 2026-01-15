@@ -55,7 +55,6 @@ static const uint8_t HORIPAD_REPORT_DESCRIPTOR[] PROGMEM = {
     0xC0               // End Collection
 };
 
-
 enum : uint8_t {
     HID_GET_REPORT = 0x01,
     HID_GET_IDLE = 0x02,
@@ -69,8 +68,6 @@ enum : uint8_t {
     HID_PROTOCOL_NONE = 0,
     HID_REPORT_PROTOCOL = 1,
 };
-
-#define D_HIDREPORT(length) { 9, 0x21, 0x01, 0x01, 0, 1, 0x22, lowByte(length), highByte(length) }
 
 struct HIDDescDescriptor {
     uint8_t len;
@@ -103,7 +100,7 @@ bool Horipad::ready() {
     return UEINTX & (1 << TXINI);
 }
 
-void Horipad::SendReport(void* data, int length) {
+void Horipad::SendReport(const void *data, int length) {
     USB_Send(pluggedEndpoint | TRANSFER_RELEASE, data, length); // see USBCore.cpp
 }
 
@@ -162,8 +159,8 @@ int Horipad::getInterface(uint8_t* interfaceCount) {
 	*interfaceCount += 1; // uses 1
 	HIDDescriptor hidInterface = {
 		D_INTERFACE(pluggedInterface, 1, USB_DEVICE_CLASS_HUMAN_INTERFACE, HID_SUBCLASS_NONE, HID_PROTOCOL_NONE),
-		D_HIDREPORT(sizeof(HORIPAD_REPORT_DESCRIPTOR)),
-		D_ENDPOINT(USB_ENDPOINT_IN(pluggedEndpoint), USB_ENDPOINT_TYPE_INTERRUPT, USB_EP_SIZE, 0x01)
+        { 9, 0x21, 0x01, 0x01, 0, 1, 0x22, lowByte(sizeof(HORIPAD_REPORT_DESCRIPTOR)), highByte(sizeof(HORIPAD_REPORT_DESCRIPTOR)) },
+		D_ENDPOINT(USB_ENDPOINT_IN(pluggedEndpoint), USB_ENDPOINT_TYPE_INTERRUPT, USB_EP_SIZE, 0x08) // bInterval 0x01 -> 0x08
 	};
 	return USB_SendControl(0, &hidInterface, sizeof(hidInterface));
 }
